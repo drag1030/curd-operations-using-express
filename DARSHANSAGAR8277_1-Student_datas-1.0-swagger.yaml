@@ -1,0 +1,8 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: stdents_Datas
+  description: >-
+    Crud operations for created endpoint on database and testing them  
+    termsOfService: https://localhost:8001
+paths: {}
