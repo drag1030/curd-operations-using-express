@@ -17,7 +17,6 @@
       "./jest.setup.js"
     ]
   },
-
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -25,8 +24,13 @@
     "supertest": "^6.3.4"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "body-parser": "^1.20.2",
+    "celebrate": "^15.0.3",
     "express": "^4.19.2",
+    "joi": "^17.12.2",
     "knex": "^3.1.0",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "yup": "^1.4.0"
   }
 }

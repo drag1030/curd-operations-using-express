@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const db = require('knex')(require('./knexfile').development);
-
-
-const knex = require('knex');
+const {authSchema, sheema} = require('./shema_validate')
+ // const {sheema} = require('./shema_validate')
+const knexW = require('knex');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,6 +13,11 @@ const PORT = process.env.PORT || 8001;
 
 async function createStudent(req, res) {
     try {
+        const { error, value} = await authSchema.validate(req.body);
+        console.log(error)
+        if(error) {
+            return res.status(402).json({ error:error.details[0].message})
+        }
         const { first_name, last_name, email } = req.body;
         if (!first_name || !last_name || !email) {
             return res.status(400).json({ error: 'Missing required fields: first_name, last_name, email' });
@@ -27,6 +33,14 @@ async function createStudent(req, res) {
 
 async function updateStudent(req, res) {
     try {
+        const { error, value} = sheema.validate(req.params);
+        console.log(error)
+
+
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
         const { id } = req.params;
         const { first_name, last_name, email } = req.body;
         await db('student').where({ id }).update({ first_name, last_name, email });
@@ -39,6 +53,13 @@ async function updateStudent(req, res) {
 
 async function deleteStudent(req, res) {
     try {
+        const { error, value} = sheema.validate(req.params);
+        console.log(error)
+
+
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
         const { id } = req.params;
         await db('student').where({ id }).del();
         res.send('Student data deleted successfully');
@@ -50,6 +71,14 @@ async function deleteStudent(req, res) {
 
 async function getStudentById(req, res) {
     try {
+        const { error, value} = sheema.validate(req.params);
+        console.log(error)
+
+
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
         const { id } = req.params;
         const student = await db('student').orderBy('id').where({ id }).first();
         if (!student) {
@@ -57,7 +86,7 @@ async function getStudentById(req, res) {
         }
         res.json(student);
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
@@ -97,5 +126,3 @@ module.exports = {
     },
     app: app // Export the app for testing purposes
 };
-
-
