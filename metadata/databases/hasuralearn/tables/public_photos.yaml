@@ -1,0 +1,16 @@
+table:
+  name: photos
+  schema: public
+event_triggers:
+  - name: photos_event
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+      update:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: http://host.docker.internal:2000/photos_event
